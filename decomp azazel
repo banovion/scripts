@@ -1,0 +1,259 @@
+local v63 = {}
+local v64 = {}
+local v65 = {}
+local v66 = {v63, v64, nil, v65}
+
+local v67 = v34()
+local v68 = {}
+
+for i = 1, v67 do
+    local v79 = 0
+    local v80, v81
+    while true do
+        if v79 == 0 then
+            v80 = v32()
+            v81 = nil
+            v79 = 1
+        end
+        if v79 == 1 then
+            if v80 == 1 then
+                v81 = v32() ~= 0
+            elseif v80 == 2 then
+                v81 = v35()
+            elseif v80 == 3 then
+                v81 = v36()
+            end
+            v68[i] = v81
+            break
+        end
+    end
+end
+
+v66[3] = v32()
+
+for i = 1, v34() do
+    local v84 = v32()
+    if v31(v84, 1, 1) == 0 then
+        local v118 = v31(v84, 2, 3)
+        local v119 = v31(v84, 4, 6)
+        local v120 = {v33(), v33(), nil, nil}
+
+        if v118 == 0 then
+            v120[3] = v33()
+            v120[4] = v33()
+        elseif v118 == 1 then
+            v120[3] = v34()
+        elseif v118 == 2 then
+            v120[3] = v34() - (2 ^ 16)
+        elseif v118 == 3 then
+            v120[3] = v34() - (2 ^ 16)
+            v120[4] = v33()
+        end
+
+        if v31(v119, 3, 3) == 1 then
+            v120[4] = v68[v120[4]]
+        end
+        if v31(v119, 1, 1) == 1 then
+            v120[2] = v68[v120[2]]
+        end
+        if v31(v119, 2, 2) == 1 then
+            v120[3] = v68[v120[3]]
+        end
+
+        v63[i] = v120
+    end
+end
+
+for i = 1, v34() do
+    v64[i - 1] = v39()
+end
+
+return v66
+
+local function v40(v70, v71, v72)
+    local v73 = v70[1]
+    local v74 = v70[2]
+    local v75 = v70[3]
+
+    return function(...)
+        local v87 = v73
+        local v88 = v74
+        local v89 = v75
+
+        local v90 = v38
+        local v91 = 1
+        local v92 = -1
+        local v93 = {}
+        local v94 = {...}
+        local v95 = select("#", ...) - 1
+        local v96 = {}
+        local v97 = {}
+
+        for i = 0, v95 do
+            if i >= v89 then
+                v93[i - v89] = v94[i + 1]
+            else
+                v97[i] = v94[i + 1]
+            end
+        end
+
+        local v98 = (v95 - v89) + 1
+        local v99, v100
+
+        -- Main execution loop
+        while true do
+            v99 = v87[v91]
+            v100 = v99[1]
+
+            if v100 == 0 then
+                local dest = v99[2]
+                local src = v97[v99[3]]
+                v97[dest + 1] = src
+                v97[dest] = src[v99[4]]
+            elseif v100 == 1 then
+                v97[v99[2]] = v97[v99[3]] - v99[4]
+            elseif v100 == 2 then
+                v97[v99[2]] = v72[v99[3]]
+            elseif v100 == 3 then
+                v97[v99[2]] = v97[v99[3]] % v99[4]
+            end
+
+            if some_condition then
+                break
+            end
+        end
+    end
+end
+
+while true do
+    if v174 == 1 then
+        v177 = v97[v175] + v176
+        v97[v175] = v177
+        v174 = 2
+    end
+
+    if v174 == 2 then
+        if v176 > 0 then
+            if v177 <= v97[v175 + 1] then
+                v91 = v99[3]
+                v97[v175 + 3] = v177
+            end
+        elseif v177 >= v97[v175 + 1] then
+            v91 = v99[3]
+            v97[v175 + 3] = v177
+        end
+        break
+    end
+
+    if v174 == 0 then
+        v175 = v99[2]
+        v176 = v97[v175 + 2]
+        v174 = 1
+    end
+end
+
+if v100 == 20 then
+    v97[v99[2]] = v97[v99[3]] % v99[4]
+
+elseif v100 == 22 then
+    local v180 = v99[2]
+    v97[v180](v21(v97, v180 + 1, v92))
+
+elseif v100 == 23 then
+    local v183 = v99[2]
+    local v184 = v97[v183]
+    for i = v183 + 1, v92 do
+        v15(v184, v97[i])
+    end
+
+elseif v100 == 24 then
+    local v186 = v99[2]
+    v97[v186] = v97[v186](v21(v97, v186 + 1, v99[3]))
+
+elseif v100 == 25 then
+    v97[v99[2]][v99[3]] = v97[v99[4]]
+
+elseif v100 == 27 then
+    return v97[v99[2]]()
+
+elseif v100 == 29 then
+    v97[v99[2]] = v99[3] + v97[v99[4]]
+
+elseif v100 == 31 then
+    v97[v99[2]] = v72[v99[3]]
+
+elseif v100 == 33 then
+    v97[v99[2]] = {}
+
+elseif v100 == 36 then
+    local v197 = v99[2]
+    v97[v197] = v97[v197](v21(v97, v197 + 1, v99[3]))
+
+elseif v100 == 38 then
+    local v200 = v99[2]
+    local results, num_results = v90(v97[v200](v21(v97, v200 + 1, v92)))
+    v92 = (num_results + v200) - 1
+    local index = 0
+    for i = v200, v92 do
+        index = index + 1
+        v97[i] = results[index]
+    end
+
+elseif v100 == 40 then
+    local v209 = v88[v99[3]]
+    local v211 = {}
+    local env = v18({}, {
+        [v7("\140\23\6\242\212\94\171", "\59\211\72\111\156\176")] = function(t, key)
+            local entry = v211[key]
+            return entry[1][entry[2]]
+        end,
+        [v7("\113\184\237\40\89\142\237\41\75\159", "\77\46\231\131")] = function(t, key, value)
+            local entry = v211[key]
+            entry[1][entry[2]] = value
+        end
+    })
+
+    for i = 1, v99[4] do
+        v91 = v91 + 1
+        local instruction = v87[v91]
+        if instruction[1] == 68 then
+            v211[i - 1] = {v97, instruction[3]}
+        else
+            v211[i - 1] = {v71, instruction[2]}
+        end
+        v96[#v96 + 1] = v211
+    end
+
+    v97[v99[2]] = v40(v209, env, v72)
+
+elseif v100 == 43 then
+    if not v97[v99[2]] then
+        v91 = v91 + 1
+    else
+        v91 = v99[3]
+    end
+
+elseif v100 == 50 then
+    local v222 = v99[2]
+    return v21(v97, v222, v92)
+
+elseif v100 == 52 then
+    v97[v99[2]] = v97[v99[3]][v99[4]]
+
+elseif v100 == 57 then
+    v97[v99[2]] = v97[v99[3]] - v99[4]
+
+elseif v100 == 60 then
+    if v97[v99[2]] == v99[4] then
+        v91 = v91 + 1
+    else
+        v91 = v99[3]
+    end
+
+elseif v100 == 61 then
+    local v292 = v99[2]
+    local value = v97[v99[3]]
+    v97[v292 + 1] = value
+    v97[v292] = value[v99[4]]
+
+end
