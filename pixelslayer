@@ -1,0 +1,18 @@
+local hook;hook = hookfunction(getrenv().task.wait, newcclosure(function(self)
+    local args = {self}
+    if rawequal(rawget(args, 1), 0.3) then
+        rawset(args, 1, 0.01)
+        return hook(unpack(args))
+    end
+    return hook(self)
+end))
+
+local function autoswing()
+while task.wait(0.07) do
+if game.Players.LocalPlayer.Character.Humanoid.Health >= 1 then
+firesignal(game:GetService("Players").LocalPlayer:GetMouse().Button1Up)
+end
+end
+end
+
+xpcall(autoswing, debug.traceback)
