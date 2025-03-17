@@ -101,7 +101,6 @@ xtab:Toggle("Nearby collect (basically the above but for\nmanual farming)", func
 end)
 
 xtab:Button("Collect all chests (doesnt get special chests)                          ", function()
-    local hitbox = workspace.placeFolders.entityManifestCollection.banovion.hitbox
     for i,v in pairs(workspace.Chests:GetChildren()) do
         local rootchest = v.RootPart
         hitbox.Position = rootchest.Position
