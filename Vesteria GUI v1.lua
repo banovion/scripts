@@ -56,7 +56,7 @@ ntab:Toggle("Inf stamina", function(toggled)
     if toggled then
         local stamina;stamina = hookmetamethod(game, "__index", function(...)
         local self,arg = ...
-        if not checkcaller() and tostring(self) == "stamina" and compareinstances(self, staminaval) and typeof(arg) == "string" then
+        if not checkcaller() and typeof(self) == "Instance" and compareinstances(self, staminaval) and typeof(arg) == "string" then
             return math.huge
         end
         return stamina(...)
