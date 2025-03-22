@@ -100,7 +100,7 @@ xtab:Toggle("Nearby collect (basically the above but for\nmanual farming)", func
     end
 end)
 
-xtab:Button("Collect all chests (doesnt get special chests)                          ", function()
+xtab:Button("Collect all chests (doesnt get special chests)\t\t\t\t\t\t", function()
     for i,v in pairs(workspace.Chests:GetChildren()) do
         local rootchest = v.RootPart
         hitbox.Position = rootchest.Position
