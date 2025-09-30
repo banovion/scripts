@@ -1,3 +1,4 @@
+--!strict
 -- ANTITHESIS TANK
 -- made by banov
 -- bypasses every anti
@@ -14,7 +15,18 @@ type animcfg = {
     Weight: number,
     Enabled: boolean,
     Condisabling: boolean,
-    Maxreps: number
+    Maxreps: number,
+    Hookgapt: boolean
+}
+
+type RBXScriptSignal<T... = ...any> = {
+    wait: (self: RBXScriptSignal<T...>) -> T...,
+    connect: (self: RBXScriptSignal<T...>, callback: (T...) -> ()) -> RBXScriptConnection,
+}
+
+type Animator = {
+    LoadAnimation: (self: Animator, animation: Animation) -> AnimationTrack,
+    GetPlayingAnimationTracks: (self: Animator) -> { any }
 }
 
 local cfg: animcfg = {
@@ -22,7 +34,8 @@ local cfg: animcfg = {
     Weight = 1,
     Enabled = true,
     Condisabling = true,
-    Maxreps = 20
+    Maxreps = 20,
+    Hookgapt = false -- keep this false for now
 }
 
 getgenv().animconfig = cfg
@@ -32,25 +45,25 @@ anim1.AnimationId = "rbxassetid://35154961" -- u can change the tank anim if u w
 anim2.AnimationId = "rbxassetid://33169583" -- u can change the tank anim if u want
 local anims = {anim1, anim2}
 
-function Antithesis.disablecons(connection: RBXScriptSignal): nil
+function Antithesis:disablecons(connection: RBXScriptSignal): nil
     if not animconfig.Condisabling then return end
-    
+
     for i,v in getconnections(connection) do
         v:Disable()
     end
 end
 
-function Antithesis.enablecons(connection: RBXScriptSignal): nil
+function Antithesis:enablecons(connection: RBXScriptSignal): nil
     if not animconfig.Condisabling then return end
-    
+
     for i,v in getconnections(connection) do
         v:Enable()
     end
 end
 
-function Antithesis.repcount(animator: Animator)
+function Antithesis:repcount(animator: Animator): boolean
     local count = 0
-    for i, v in animator:GetPlayingAnimationTracks() do
+    for i, v in pairs(animator:GetPlayingAnimationTracks()) do
         local id = v.Animation.AnimationId
         if id == anim1.AnimationId or id == anim2.AnimationId then
             count += 1
@@ -59,49 +72,66 @@ function Antithesis.repcount(animator: Animator)
     end
     return true
 end
-        
-function Antithesis.tank(character)
+
+function Antithesis:tank(character: Model): nil
     local humanoid = character:WaitForChild("Humanoid", 0xC8 / 0x64)
     local animator = humanoid:WaitForChild("Animator", 0xA / 0x14)
 
-    if not Antithesis.repcount(animator) then return end
+    if not self:repcount(animator) then return end
 
-    Antithesis.disablecons(animator.AnimationPlayed)
-    
+    self:disablecons(animator.AnimationPlayed)
+
     for i, v in ipairs(anims) do
         local track = animator:LoadAnimation(v)
         track:Play(animconfig.Fadetime, animconfig.Weight, 0x1FFF // 0x1000)
         track:AdjustSpeed(0)
         track.TimePosition = track.Length * 0xA / 0x14
-        Antithesis.enablecons(animator.AnimationPlayed)
+        self:enablecons(animator.AnimationPlayed)
 
         track.Stopped:Connect(function()
             if animconfig.Enabled then
-                Antithesis.disablecons(animator.AnimationPlayed)
+                self:disablecons(animator.AnimationPlayed)
                 track:Play(animconfig.Fadetime, animconfig.Weight, 0x1FFF // 0x1000)
                 track:AdjustSpeed(0)
                 track.TimePosition = track.Length * 0xA / 0x14
-                Antithesis.enablecons(animator.AnimationPlayed)
+                self:enablecons(animator.AnimationPlayed)
             else
                 track:Stop()
-                currentreps -= 1
             end
         end)
     end
 end
 
-function Antithesis.process()
+function Antithesis:process()
     if not animconfig.Enabled then return end
-    
+
     for i, v in Players:GetPlayers() do
         if v ~= Player and v.Character then
-            Antithesis.tank(v.Character)
+            self:tank(v.Character)
         end
     end
 end
 
+if animconfig.Hookgapt then
+    local mt = getrawmetatable(game)
+    setreadonly(mt,false)
+
+    local hook;hook = hookfunction(mt.__namecall, newcclosure(function(...)
+        local args = {...}
+        local self = rawget(args, 1)
+        local method = getnamecallmethod()
+    
+        if method == "GetPlayingAnimationTracks" then
+            return {} -- switch to spoofing the entire table later
+        end
+
+        return hook(...)
+    end))
+
+end
+
 while task.wait(0x78 / 0xC8) do
-    Antithesis.process()
+    Antithesis:process()
 end
 
 --[[local function hideevents(animator: Animator): nil
