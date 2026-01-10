@@ -1,0 +1,67 @@
+print("executed")
+local cfg = {
+    ["enemyesp"] = true,
+    ["taskesp"] = true
+}
+
+local function EnemyESP()
+    local ef = game.Workspace:FindFirstChild("Enemies")
+    if ef then
+        local color = Color3.fromRGB(255, 215, 0)
+        for i, model in pairs(ef:GetChildren()) do
+            if model:IsA("Model") then
+                local root = model.RootPart or model.HumanoidRootPart or model.PrimaryPart
+                if root then
+                    local sx, sy, visible = utility.world_to_screen(root.Position)
+                    if visible then
+                        draw.text_outlined(model.Name, sx-40, sy-25, color, "ConsolasBold", 255)
+                    end
+                end
+            end
+        end
+    end
+end
+
+local function TaskESP()
+    local tf = game.Workspace:FindFirstChild("Tasks")
+    if tf then
+        local green = Color3.fromRGB(0, 255, 0) -- if button didnt get pressed yet
+        local red = Color3.fromRGB(255, 0, 0) -- if button has been pressed
+        for _, wb in pairs(tf:GetChildren()) do
+            if wb:IsA("Model") then
+                local button = wb:FindFirstChild("Button")
+                if button then
+                    local buttonpress = button:FindFirstChild("ButtonPress")
+                    if buttonpress then
+                        local pressed = buttonpress:GetAttribute("Pressed")
+                        local espcolor = red
+                        if pressed then
+                            if pressed.Value then
+                                espcolor = red
+                            else
+                                espcolor = green
+                            end
+                        else
+                            print("attribute not found")
+                        end
+                        local sx, sy, visible = utility.world_to_screen(button.Position)
+                        if visible then
+                            draw.text_outlined(wb.Name, sx-40, sy-25, espcolor, "ConsolasBold", 255)
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+local code = {{EnemyESP, cfg["enemyesp"]}, {TaskESP, cfg["taskesp"]}}
+setmetatable(code, {__call = function(t)
+    for _, v in ipairs(t) do
+        if v[2] then v[1]() end
+    end
+end})
+
+cheat.register("onPaint", function()
+    code()
+end)
